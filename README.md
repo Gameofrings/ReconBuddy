@@ -67,7 +67,7 @@ pip install -r requirements.txt
 1. **Run the Script**:
 
    ```bash
-   python3 recon.py
+   python3 ReconBuddy.py
    ```
 
 2. **Provide the Target Domain**:
