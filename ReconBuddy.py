@@ -293,7 +293,7 @@ def xss_hunting():
         logging.info("No XSS vulnerabilities found or all were filtered out.")
     
     print(f"{Fore.GREEN}XSS hunting complete.{Style.RESET_ALL}")
-    logging.info("XSS hunting complete.").
+    logging.info("XSS hunting complete.")
 
 def main():
     # Ensure the necessary tools are available
