@@ -130,7 +130,7 @@ def check_cors_misconfiguration():
     print(f"{Fore.YELLOW}Checking for CORS misconfigurations...{Style.RESET_ALL}")
     logging.info("Checking for CORS misconfigurations.")
     
-    cmd = "python3 ~/tools/Corsy/corsy.py -i alive.txt -t 40 | tee -a corsy_op.txt"
+    cmd = "python3 ~/Tools/Corsy/corsy.py -i alive.txt -t 40 | tee -a corsy_op.txt"
     run_command(cmd)
 
 def cms_detection():
@@ -146,7 +146,7 @@ def http_request_smuggling():
     print(f"{Fore.YELLOW}Checking for HTTP request smuggling...{Style.RESET_ALL}")
     logging.info("Checking for HTTP request smuggling.")
     
-    cmd = "python3 ~/tools/smuggler.py -u alive.txt | tee -a smuggler_op.txt"
+    cmd = "python3 ~/Tools/smuggler/smuggler.py -u alive.txt | tee -a smuggler_op.txt"
     run_command(cmd)
 
 def endpoints_discovery(domain):
@@ -280,7 +280,7 @@ def xss_hunting():
     
     # Running the urldedupe, bhedak, and airixss command
     print(f"{Fore.CYAN}Running URL deduplication and XSS detection tools...{Style.RESET_ALL}")
-    command = "urldedupe -qs | bhedak '\"><svg onload=confirm(1)>' | airixss -payload \"confirm(1)\" | egrep -v 'Not'"
+    command = "cat xss |urldedupe -qs | bhedak '\"><svg onload=confirm(1)>' | airixss -payload \"confirm(1)\" | egrep -v 'Not'"
     result = run_command(command)
     
     if result:
