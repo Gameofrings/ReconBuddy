@@ -13,7 +13,8 @@
 - **Open Redirect Scanning**: Identify possible open redirect vulnerabilities.
 - **Endpoint Discovery**: Extract endpoints from various sources like gau, waybackurls, and others.
 - **SQL Injection Testing**: Automate SQL injection testing using `SQLMap` and `Ghauri`.
-
+- **XSS Detection: Automate the detection of Cross-Site Scripting (XSS) vulnerabilities.
+- **SSTI Detection: Scan for Server-Side Template Injection (SSTI) vulnerabilities.
 ### Prerequisites
 
 Before running the script, ensure the following tools are installed and accessible in your system’s PATH:
