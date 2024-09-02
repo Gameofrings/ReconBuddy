@@ -50,7 +50,7 @@ pip install -r requirements.txt
 1. **Clone the Repository**:
 
    ```bash
-   git clone https://github.com/yourusername/ReconBuddy.git
+   git clone https://github.com/Gameofrings/ReconBuddy.git
    cd ReconBuddy
    ```
 
