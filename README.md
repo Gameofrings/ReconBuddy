@@ -1,6 +1,4 @@
-Certainly! Here's a refined version of the `README.md` file for your script:
 
----
 
 ## ReconBuddy
 
