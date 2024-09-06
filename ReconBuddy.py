@@ -122,7 +122,7 @@ def run_nuclei_scans():
     ]
     
     for template in tqdm(nuclei_templates, desc="Running Nuclei scans"):
-        cmd = f"nuclei -l alive.txt -t {template} -c 60 -o nuclei_op/{os.path.basename(template)}.txt"
+        cmd = f"nuclei -l http200 -t {template} -c 60 -o nuclei_op/{os.path.basename(template)}.txt"
         run_command(cmd)
 
 def check_cors_misconfiguration():
@@ -130,7 +130,7 @@ def check_cors_misconfiguration():
     print(f"{Fore.YELLOW}Checking for CORS misconfigurations...{Style.RESET_ALL}")
     logging.info("Checking for CORS misconfigurations.")
     
-    cmd = "python3 ~/Tools/Corsy/corsy.py -i alive.txt -t 40 | tee -a corsy_op.txt"
+    cmd = "python3 ~/tools/Corsy/corsy.py -i http200 -t 40 | tee -a corsy_op.txt"
     run_command(cmd)
 
 def cms_detection():
@@ -138,7 +138,7 @@ def cms_detection():
     print(f"{Fore.YELLOW}Detecting CMS using WhatWeb...{Style.RESET_ALL}")
     logging.info("Detecting CMS using WhatWeb.")
     
-    cmd = "whatweb -i alive.txt | tee -a whatweb_op.txt"
+    cmd = "whatweb -i http200 | tee -a whatweb_op.txt"
     run_command(cmd)
 
 def http_request_smuggling():
@@ -146,7 +146,7 @@ def http_request_smuggling():
     print(f"{Fore.YELLOW}Checking for HTTP request smuggling...{Style.RESET_ALL}")
     logging.info("Checking for HTTP request smuggling.")
     
-    cmd = "python3 ~/Tools/smuggler/smuggler.py -u alive.txt | tee -a smuggler_op.txt"
+    cmd = "python3 ~/tools/smuggler.py -u http200 | tee -a smuggler_op.txt"
     run_command(cmd)
 
 def endpoints_discovery(domain):
@@ -155,10 +155,10 @@ def endpoints_discovery(domain):
     logging.info(f"Discovering endpoints for domain: {domain}")
     
     commands = [
-        (f"gau {domain} | tee gau_endpoints.txt", "gau_endpoints.txt"),
-        (f"waybackurls {domain} | tee waybackurls_endpoints.txt", "waybackurls_endpoints.txt"),
-        (f"katana -u {domain} -o katana_endpoints.txt", "katana_endpoints.txt"),
-        (f"hakrawler -url {domain} -depth 3 | tee hakrawler_endpoints.txt", "hakrawler_endpoints.txt")
+        (f"cat http200|gau | tee gau_endpoints.txt", "gau_endpoints.txt"),
+        (f"cat http200 |waybackurls  | tee waybackurls_endpoints.txt", "waybackurls_endpoints.txt"),
+        (f"cat http200 |katana  -o katana_endpoints.txt", "katana_endpoints.txt"),
+        (f"cat http200 |hakrawler  -depth 3 | tee hakrawler_endpoints.txt", "hakrawler_endpoints.txt")
     ]
 
     # Run all commands and save outputs
@@ -229,6 +229,7 @@ def open_redirect_scanning():
     logging.info("Scanning for open redirects.")
     
     cmd = "cat all_endpoints.txt | gf redirect | httpx -silent -threads 30 | anew open_redirects.txt"
+    
     run_command(cmd)
 #ssti testing
 def ssti_hunting():
@@ -280,7 +281,7 @@ def xss_hunting():
     
     # Running the urldedupe, bhedak, and airixss command
     print(f"{Fore.CYAN}Running URL deduplication and XSS detection tools...{Style.RESET_ALL}")
-    command = "cat xss |urldedupe -qs | bhedak '\"><svg onload=confirm(1)>' | airixss -payload \"confirm(1)\" | egrep -v 'Not'"
+    command = "cat xss| urldedupe -qs | bhedak '\"><svg onload=confirm(1)>' | airixss -payload \"confirm(1)\" | xss_final| egrep -v 'Not' "
     result = run_command(command)
     
     if result:
@@ -293,7 +294,7 @@ def xss_hunting():
         logging.info("No XSS vulnerabilities found or all were filtered out.")
     
     print(f"{Fore.GREEN}XSS hunting complete.{Style.RESET_ALL}")
-    logging.info("XSS hunting complete.")
+    logging.info("XSS hunting complete.").
 
 def main():
     # Ensure the necessary tools are available
